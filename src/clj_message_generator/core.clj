@@ -8,6 +8,8 @@
 (def ^{:const true}
     default-exchange-name "")
 
+(def thinktime 700)
+
 (defn -main
     [& args]
     (print "starting emitter with args " args)
@@ -16,8 +18,13 @@
                   qname (nth args 0)]
           (println (format "[main] Connected. Channel id: %d" (.getChannelNumber ch)))
           (lq/declare ch qname :exclusive false :durable true :auto-delete false)
-          (lb/publish ch default-exchange-name qname "interesting" :content-type "text/plain" :type "storm.events")
-          (Thread/sleep 500)
+          (loop [i 10]
+           (when (> i 0) 
+            (do (lb/publish ch default-exchange-name qname "interesting" :content-type "text/plain" :type "storm.events")
+            (println "emit")
+            (Thread/sleep thinktime)
+           )
+          (recur (- i 1))))
           (println "[main] Disconnecting...")
           (rmq/close ch)
           (rmq/close conn)))
