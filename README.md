@@ -1,10 +1,11 @@
 # clj-message-generator
 
-A Clojure library designed to ... well, that part is up to you.
+A very simple Clojure library for generating a continuous stream of test messages for on rabbit mq intended to help test complex event processing.
 
 ## Usage
 
-FIXME
+lein deps
+lein run -m clj-message-generator queuename messagefile thinktime threads
 
 ## License
 
